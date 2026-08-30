@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f3e9">
+  <meta name="description" content="一読勝負と一題勝負を選んで始める、小学6年生のための朝学習ポータルです。">
+  <title>朝の勝負｜小学6年生 朝学習ポータル</title>
+  <style>
+    :root{--ink:#17233c;--paper:#f7f3e9;--blue:#205b88;--red:#b94b38}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .shell{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;padding:0 clamp(20px,5vw,76px)}
+    .sun{position:absolute;z-index:-2;top:-260px;right:-180px;width:620px;height:620px;border-radius:50%;background:#efd56d;opacity:.38}
+    .grid{position:absolute;z-index:-1;inset:0;opacity:.28;background-image:linear-gradient(rgba(23,35,60,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(23,35,60,.08) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:linear-gradient(to bottom,#000,transparent 88%);mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+    header{width:min(1180px,100%);height:94px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(23,35,60,.18)}
+    .brand{display:flex;align-items:center;gap:12px}.brand-mark{display:grid;place-items:center;width:45px;height:45px;border:2px solid var(--ink);border-radius:50%;font:700 23px/1 "Yu Mincho","Hiragino Mincho ProN",serif}.brand strong{display:block;font:700 19px/1.2 "Yu Mincho","Hiragino Mincho ProN",serif;letter-spacing:.08em}.brand small{display:block;margin-top:3px;font:700 8px/1 Arial,sans-serif;letter-spacing:.18em;opacity:.55}.header-note{margin:0;font-size:12px;font-weight:700;letter-spacing:.08em}
+    .hero{width:min(1180px,100%);margin:0 auto;padding:clamp(54px,8vh,88px) 0 56px}.hero-copy{margin-bottom:clamp(34px,6vh,58px)}.eyebrow{margin:0 0 18px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:800;letter-spacing:.16em}.eyebrow span{width:34px;height:2px;background:var(--red)}h1{margin:0;font:700 clamp(42px,6vw,78px)/1.08 "Yu Mincho","Hiragino Mincho ProN",serif;letter-spacing:.02em}h1 em{color:var(--red);font-style:normal}.lead{margin:21px 0 0;font-size:clamp(14px,1.5vw,17px);font-weight:600}
+    .apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,34px)}
+    .card{position:relative;display:flex;flex-direction:column;min-height:330px;overflow:hidden;padding:clamp(25px,3.4vw,42px);border:2px solid var(--ink);border-radius:8px;background:rgba(255,255,255,.82);box-shadow:8px 8px 0 var(--ink);transition:transform .18s ease,box-shadow .18s ease}
+    .card:hover{transform:translate(-3px,-3px);box-shadow:12px 12px 0 var(--ink)}.card:focus-visible{outline:4px solid #f0c64d;outline-offset:5px}.card:after{content:"";position:absolute;top:-55px;right:-50px;width:180px;height:180px;border:34px solid currentColor;border-radius:50%;opacity:.07}.reading{color:var(--blue)}.math{color:var(--red)}.index{position:absolute;top:18px;right:22px;font:800 12px/1 Arial,sans-serif;letter-spacing:.15em;opacity:.55}.subject{align-self:flex-start;padding:6px 13px;border:1px solid currentColor;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.15em}.title-row{display:flex;align-items:center;gap:18px;margin-top:27px}.monogram{display:grid;place-items:center;flex:0 0 auto;width:65px;height:65px;border-radius:50%;background:currentColor;color:#fff;font:700 35px/1 "Yu Mincho",serif}.app-title{display:block;color:var(--ink);font:700 clamp(29px,4vw,45px)/1.1 "Yu Mincho","Hiragino Mincho ProN",serif;letter-spacing:.05em}.reading-text{display:block;margin-top:7px;color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.17em;opacity:.6}.description{margin:25px 0 24px;color:var(--ink);font-size:14px;font-weight:600;line-height:1.9}.description span{display:block}.action{margin-top:auto;padding-top:18px;border-top:1px solid currentColor;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:800}.action b{font-size:25px;transition:transform .18s ease}.card:hover .action b{transform:translateX(5px)}
+    footer{width:min(1180px,100%);margin:0 auto;padding:4px 0 34px}footer p{margin:0;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em}.dot{display:inline-block;width:7px;height:7px;margin-right:8px;border-radius:50%;background:#57935f;box-shadow:0 0 0 4px rgba(87,147,95,.13)}
+    @media(max-width:720px){.shell{padding:0 18px}header{height:78px}.header-note{display:none}.hero{padding:42px 0 44px}.hero-copy{margin-bottom:30px}.apps{grid-template-columns:1fr;gap:22px}.card{min-height:286px;padding:25px;box-shadow:6px 6px 0 var(--ink)}.title-row{margin-top:22px}.monogram{width:56px;height:56px;font-size:30px}.description{margin:20px 0;font-size:13px}footer{padding-bottom:28px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.action b{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="shell" id="top">
+    <div class="sun" aria-hidden="true"></div><div class="grid" aria-hidden="true"></div>
+    <header>
+      <a class="brand" href="#top" aria-label="朝の勝負 ホーム"><span class="brand-mark">朝</span><span><strong>朝の勝負</strong><small>MORNING TRAINING</small></span></a>
+      <p class="header-note">小学6年生 朝学習ポータル</p>
+    </header>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy"><p class="eyebrow"><span></span>毎朝、ひとつずつ。</p><h1 id="page-title">今日も、<br><em>頭を起こそう。</em></h1><p class="lead">取り組むトレーニングを選んでください。</p></div>
+      <div class="apps" aria-label="トレーニングを選ぶ">
+        <a class="card reading" href="https://script.google.com/macros/s/AKfycbxaGDgAMzzwmq0H1VKSfQ9QyEo8Ym9h5DCgjS0I0xegWwdzr5pTGJG_1_lgw9vvZ7aHkQ/exec" aria-label="国語の一読勝負をはじめる">
+          <span class="index" aria-hidden="true">01</span><span class="subject">国語</span><span class="title-row"><span class="monogram" aria-hidden="true">一</span><span><strong class="app-title">一読勝負</strong><small class="reading-text">いちどくしょうぶ</small></span></span><span class="description"><span>文章を一度だけ読み、思い出して答える</span><span>4分間の読解トレーニング</span></span><span class="action">一読勝負をはじめる <b aria-hidden="true">→</b></span>
+        </a>
+        <a class="card math" href="https://ichidai-shobu.web.app/" aria-label="算数の一題勝負をはじめる">
+          <span class="index" aria-hidden="true">02</span><span class="subject">算数</span><span class="title-row"><span class="monogram" aria-hidden="true">一</span><span><strong class="app-title">一題勝負</strong><small class="reading-text">いちだいしょうぶ</small></span></span><span class="description"><span>紙と筆記用具を用意して、じっくり考える</span><span>今日の一問トレーニング</span></span><span class="action">一題勝負をはじめる <b aria-hidden="true">→</b></span>
+        </a>
+      </div>
+    </section>
+    <footer><p><span class="dot"></span>生徒IDを準備してから始めましょう</p></footer>
+  </main>
+</body>
+</html>
+
