@@ -75,5 +75,47 @@ header{max-width:1280px;margin:auto;height:64px;display:flex;align-items:center;
     document.addEventListener('visibilitychange', updateVideoVisibility);
     window.addEventListener('pageshow', updateVideoVisibility);
   </script>
+
+  <script>
+    // 日本時間 2026年10月1日0時から国語の入口を文脈勝負へ切り替える。
+    (function () {
+      const switchAt = Date.parse('2026-10-01T00:00:00+09:00');
+      const card = document.querySelector('.card.reading');
+      const original = {
+        href: card.getAttribute('href'),
+        label: card.getAttribute('aria-label'),
+        title: card.querySelector('.app-title').textContent,
+        reading: card.querySelector('.reading-text').textContent,
+        description: card.querySelector('.description').innerHTML,
+        action: card.querySelector('.action').firstChild.nodeValue,
+        monogram: card.querySelector('.monogram').textContent,
+        meta: document.querySelector('meta[name="description"]').content
+      };
+      let timer;
+      function updateReadingApp() {
+        clearTimeout(timer);
+        const remaining = switchAt - Date.now();
+        const switched = remaining <= 0;
+        card.href = switched ? 'https://20230104curl.github.io/bunmyaku-shobu/?v=20260906-1' : original.href;
+        card.setAttribute('aria-label', switched ? '国語の文脈勝負をはじめる' : original.label);
+        card.querySelector('.app-title').textContent = switched ? '文脈勝負' : original.title;
+        card.querySelector('.reading-text').textContent = switched ? 'ぶんみゃくしょうぶ' : original.reading;
+        card.querySelector('.description').innerHTML = switched
+          ? '<span>６つの段落を並べ替え、文章のつながりを考える</span><span>３分間の読解トレーニング</span>'
+          : original.description;
+        card.querySelector('.action').firstChild.nodeValue = switched ? '文脈勝負をはじめる ' : original.action;
+        card.querySelector('.monogram').textContent = switched ? '文' : original.monogram;
+        document.querySelector('meta[name="description"]').content = switched
+          ? original.meta.replace('一読勝負', '文脈勝負') : original.meta;
+        if (!switched) timer = setTimeout(updateReadingApp, Math.min(remaining, 2147483647));
+      }
+      updateReadingApp();
+      document.addEventListener('visibilitychange', updateReadingApp);
+      window.addEventListener('pageshow', updateReadingApp);
+      window.addEventListener('focus', updateReadingApp);
+      card.addEventListener('click', updateReadingApp);
+      card.addEventListener('auxclick', updateReadingApp);
+    }());
+  </script>
 </body>
 </html>
