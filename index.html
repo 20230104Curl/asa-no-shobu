@@ -29,7 +29,7 @@ header{max-width:1280px;margin:auto;height:64px;display:flex;align-items:center;
       <div class="hero-copy"><p class="eyebrow"><span></span>毎朝、ひとつずつ。</p><h1 id="page-title">今日も、<br><em>頭を起こそう。</em></h1><p class="lead">取り組むトレーニングを選んでください。</p></div>
       <div class="apps" aria-label="トレーニングを選ぶ">
         <a class="card reading" href="https://script.google.com/macros/s/AKfycbxK0tgkNPygRssr7nxi99Fw0gsEZDl1GAqcEoacafJLpubsgBMJUsWAgrllqCacrkj4/exec" aria-label="国語の一読勝負をはじめる">
-          <span class="index" aria-hidden="true">01</span><span class="subject">国語</span><span class="title-row"><span class="monogram" aria-hidden="true">一</span><span><strong class="app-title">一読勝負</strong><small class="reading-text">いちどくしょうぶ</small></span></span><span class="description"><span>文章を一度だけ読み、思い出して答える</span><span>4分間の読解トレーニング</span></span><span class="action">一読勝負をはじめる <b aria-hidden="true">→</b></span>
+          <span class="index" aria-hidden="true">01</span><span class="subject">国語</span><span class="title-row"><span class="monogram" aria-hidden="true">一</span><span><strong class="app-title">一読勝負</strong><small class="reading-text">いちどくしょうぶ</small></span></span><span class="description"><span>本文を３分間読んでから、思い出して答える</span><span>4分間の読解トレーニング</span></span><span class="action">一読勝負をはじめる <b aria-hidden="true">→</b></span>
         </a>
         <a class="card math" href="https://ichidai-shobu.web.app/" aria-label="算数の一題勝負をはじめる">
           <span class="index" aria-hidden="true">02</span><span class="subject">算数</span><span class="title-row"><span class="monogram" aria-hidden="true">一</span><span><strong class="app-title">一題勝負</strong><small class="reading-text">いちだいしょうぶ</small></span></span><span class="description"><span>紙と筆記用具を用意して、じっくり考える</span><span>今日の一問トレーニング</span></span><span class="action">一題勝負をはじめる <b aria-hidden="true">→</b></span>
@@ -77,9 +77,10 @@ header{max-width:1280px;margin:auto;height:64px;display:flex;align-items:center;
   </script>
 
   <script>
-    // 日本時間 2026年10月1日0時から国語の入口を文脈勝負へ切り替える。
+    // 国語の入口は10月のみ文脈勝負。日本時間11月1日0時から一読勝負へ戻す。
     (function () {
       const switchAt = Date.parse('2026-10-01T00:00:00+09:00');
+      const returnAt = Date.parse('2026-11-01T00:00:00+09:00');
       const card = document.querySelector('.card.reading');
       const original = {
         href: card.getAttribute('href'),
@@ -94,8 +95,9 @@ header{max-width:1280px;margin:auto;height:64px;display:flex;align-items:center;
       let timer;
       function updateReadingApp() {
         clearTimeout(timer);
-        const remaining = switchAt - Date.now();
-        const switched = remaining <= 0;
+        const now = Date.now();
+        const switched = now >= switchAt && now < returnAt;
+        const nextChange = now < switchAt ? switchAt : now < returnAt ? returnAt : null;
         card.href = switched ? 'https://20230104curl.github.io/bunmyaku-shobu/?v=20260906-1' : original.href;
         card.setAttribute('aria-label', switched ? '国語の文脈勝負をはじめる' : original.label);
         card.querySelector('.app-title').textContent = switched ? '文脈勝負' : original.title;
@@ -107,7 +109,7 @@ header{max-width:1280px;margin:auto;height:64px;display:flex;align-items:center;
         card.querySelector('.monogram').textContent = switched ? '文' : original.monogram;
         document.querySelector('meta[name="description"]').content = switched
           ? original.meta.replace('一読勝負', '文脈勝負') : original.meta;
-        if (!switched) timer = setTimeout(updateReadingApp, Math.min(remaining, 2147483647));
+        if (nextChange !== null) timer = setTimeout(updateReadingApp, Math.min(nextChange - now, 2147483647));
       }
       updateReadingApp();
       document.addEventListener('visibilitychange', updateReadingApp);
