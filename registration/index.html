@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小6朝学習｜継続利用登録（テスト用）</title>
+<style>body{background:#f7f3e9;color:#17233c;font-family:"Yu Gothic",Meiryo,sans-serif;margin:0;padding:24px}main{margin:7vh auto;max-width:420px;background:white;padding:30px;border:1px solid #d8dce3;border-radius:16px;box-shadow:0 14px 40px #17233c13}h1{font-size:24px}p{line-height:1.8}label{display:block;margin:18px 0 8px;font-weight:700}input{width:100%;box-sizing:border-box;border:1px solid #8999ab;padding:14px;font-size:20px;border-radius:8px}button{width:100%;border:0;border-radius:8px;background:#205b88;color:white;padding:14px;margin-top:16px;font-size:16px;font-weight:700;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.muted{color:#626d7b;font-size:13px}.identity{background:#f3f6fa;border-radius:8px;padding:18px;margin-top:18px}.hidden{display:none}.error{color:#a22b2b}</style>
+</head><body><main>
+<h1>小6 朝学習</h1><p>11月以降の継続利用登録</p>
+<div id="phase1"><label for="sid">生徒ID（8桁）</label><input id="sid" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="生徒IDを入力"><button id="lookup" disabled>生徒を確認する</button></div>
+<div id="phase2" class="hidden"><div class="identity"><div class="muted">登録する生徒をご確認ください</div><h2 id="name"></h2><div id="campus"></div></div><button id="enroll">この生徒の継続利用を登録する</button><button id="back" style="background:#68798c">入力し直す</button></div>
+<div id="phase3" class="hidden"><h2>登録が完了しました</h2><p>11月以降も、これまでどおり朝学習を利用できます。</p></div>
+<p id="message" role="status" aria-live="polite" class="muted"></p>
+<p class="muted">※準備中の画面です。公開・運用開始前に管理者による接続試験が必要です。</p>
+</main><script>
+/* Google Apps Script デプロイ完了後に実際のURLを設定する。未設定の場合は通信しない。 */
+const API_URL = '';
+const idField = document.getElementById('sid');
+const lookupButton = document.getElementById('lookup');
+const msg = document.getElementById('message');
+let selected = null;
+idField.addEventListener('input',()=>{idField.value=idField.value.replace(/\\D/g,'').slice(0,8);lookupButton.disabled=!/^\\d{8}$/.test(idField.value)});
+function phase(n){[1,2,3].forEach(i=>document.getElementById('phase'+i).classList.toggle('hidden',i!==n));}
+function error(message){msg.textContent=message;msg.className='error';}
+lookupButton.addEventListener('click',async()=>{
+ if(!API_URL) return error('管理者によるAPI接続設定がまだ完了していません。');
+ lookupButton.disabled=true;msg.textContent='確認中…';
+ try{
+  const url=new URL(API_URL);url.searchParams.set('action','lookup');url.searchParams.set('studentId',idField.value);
+  const r=await fetch(url.toString());const data=await r.json();
+  if(!data.ok)throw Error(data.message||'確認できません');
+  selected=data;document.getElementById('name').textContent=data.name;document.getElementById('campus').textContent=data.campus||'';
+  if(data.registered){phase(3)}else{phase(2)}msg.textContent='';
+ }catch(e){error(e.message||'通信に失敗しました')}finally{lookupButton.disabled=false;}
+});
+document.getElementById('back').addEventListener('click',()=>{selected=null;phase(1);msg.textContent=''});
+document.getElementById('enroll').addEventListener('click',async()=>{
+ if(!selected||!API_URL)return;const button=document.getElementById('enroll');button.disabled=true;msg.textContent='登録中…';
+ try{
+  const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'enroll',studentId:selected.studentId,confirmedName:selected.name})});
+  const data=await r.json();if(!data.ok)throw Error(data.message||'登録できません');phase(3);msg.textContent='';
+ }catch(e){error(e.message||'通信に失敗しました')}finally{button.disabled=false}
+});
+</script></body></html>
