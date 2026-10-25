@@ -28,7 +28,7 @@ function setupContinuationRegistration() {
   sheet.setFrozenRows(1);
 }
 function student_(id) {
-  if (!/^\\d{8}$/.test(String(id || ''))) return null;
+  if (!/^\d{8}$/.test(String(id || ''))) return null;
   const sh = continuationBook_().getSheetByName(CONTINUATION.rosterSheet);
   if (!sh || sh.getLastRow() < 2) return null;
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, 4).getDisplayValues();
