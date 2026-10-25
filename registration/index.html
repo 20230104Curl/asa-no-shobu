@@ -16,7 +16,7 @@ const idField = document.getElementById('sid');
 const lookupButton = document.getElementById('lookup');
 const msg = document.getElementById('message');
 let selected = null;
-idField.addEventListener('input',()=>{idField.value=idField.value.replace(/\\D/g,'').slice(0,8);lookupButton.disabled=!/^\\d{8}$/.test(idField.value)});
+idField.addEventListener('input',()=>{idField.value=idField.value.replace(/\D/g,'').slice(0,8);lookupButton.disabled=!/^\d{8}$/.test(idField.value)});
 function phase(n){[1,2,3].forEach(i=>document.getElementById('phase'+i).classList.toggle('hidden',i!==n));}
 function error(message){msg.textContent=message;msg.className='error';}
 lookupButton.addEventListener('click',async()=>{
